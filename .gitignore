@@ -1,0 +1,7 @@
+/results
+/cal_files
+*.csv
+*.pyc
+*.pdf
+/octave/octave-core
+*.dbd
