@@ -38,7 +38,9 @@ def process(date_time,model,nchan,serial_num,temperature,samp_rate,firm_rev,fpga
         ch_data = np.vstack((ch_data,[callOctave(filename,nchan)]))
         filename = serial_num+"_gain3"
         ch_data = np.vstack((ch_data,[callOctave(filename,nchan)]))
-        
+    elif 'ACQ42' in model :
+        filename = serial_num
+        ch_data = np.array([callOctave(filename,nchan)])
     
     ################################################ Begin XML Generation
     
@@ -141,8 +143,9 @@ def process(date_time,model,nchan,serial_num,temperature,samp_rate,firm_rev,fpga
             SubElement(gain3, 'Calibrated', ch=str(i), eslo=str(split_params[0]), eoff=str(split_params[1]))
             
     elif 'ACQ42' in model :
+       data = SubElement(acqcal, 'Data', AICHAN=str(nchan), code_min=str(min_codes), code_max=str(max_codes))
        # ACQ42X NO GAINS
-       gain0 = SubElement(data, 'Range', name="10V", sw="0,0")
+       gain0 = SubElement(data, 'Range', name="10V")
        SubElement(gain0, 'Nominal', roff="0", eslo=str(20.0/np.power(2,res)), eoff="0")
        for i in range(1,nchan+1):
             split_params = ch_data[0][i-1]

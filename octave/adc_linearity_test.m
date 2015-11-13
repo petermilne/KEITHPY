@@ -23,7 +23,6 @@ data = data(2:end,:);
 % Depending on format of csv this may have to change
 
 % This is the requested voltage
-%dac_volts = data(:,[4+1]);
 dac_volts = data(:,[nchan+1]);
 avg_code = mean(dac_volts);
 
@@ -42,12 +41,6 @@ for i = 1:nchan
 	fclose( myfile );
 
 end
-
-
-% loc_in_str = strfind(filename,"cpsc");
-% boardname	= substr(filename, loc_in_str(length(loc_in_str)), 8);
-% boardname = strrep(boardname, '_', '\_');
-% boardname = toupper(boardname);
 
 
 % Create plot command
@@ -72,7 +65,7 @@ pdffile = strcat("./adc_linearity_results/", filename, '_Linearity_Test','.pdf')
 grid("on");
 axis ([-min(dac_volts),max(dac_volts)]);
 xlabel ('Volts', 'FontName','LiberationMono-Regular.ttf','FontSize',10);
-ylabel ('Volts') #, 'FontName','LiberationMono-Regular.ttf','FontSize',10);
+ylabel ('CH Error in Volts') #, 'FontName','LiberationMono-Regular.ttf','FontSize',10);
 title(thetitle, 'FontName','LiberationMono-Regular.ttf','FontSize',10);
 text(0, -0.1,ctime(time()), 'FontName','LiberationMono-Regular.ttf','FontSize',8, 'units', 'normalized' );
 

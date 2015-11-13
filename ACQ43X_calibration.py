@@ -24,6 +24,7 @@ card = sys.argv[1]
 
 if card == 'acq420' or card == 'acq425' :
     has_gains = 1
+    keith_func.set_GAIN_all(0)
 
 ############ Set output filename and open for CSV writing #########
 command_str = ai_uut+":"+ai_site+":SERIAL";card_serial = caget(command_str)
