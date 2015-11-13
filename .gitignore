@@ -5,3 +5,5 @@
 *.pdf
 /octave/octave-core
 *.dbd
+octave/adc_linearity_results
+utility_scripts/

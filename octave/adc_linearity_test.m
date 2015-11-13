@@ -1,9 +1,8 @@
 % Plots linearity of ADCs
 %%% Using the python script the X channels from the ADCs are in colums 1 -> X with the DAC setting in column X+1
 % Scott Robson - 13:06:02 Thu 22 Jan 2015
-function adc_linearity_test(filename)
+function adc_linearity_test(filename,nchan)
 
-nchan = 32;
 %pdffile = strcat("./adc_linearity_results/", filename, ".pdf";
 txt_file = strcat("../cal_files/", filename, ".txt");
 csv_file = strcat("../results/", filename, ".csv");
@@ -39,7 +38,7 @@ for i = 1:nchan
 	ch_error{i} = ch_fit - dac_volts; % Subtract dac voltages from the points on this line to give error
 	
 	myfile=fopen(txt_file, "a" );
-	fprintf(myfile,formatspec,i,ch_data(21),regress(1),regress(2))
+	fprintf(myfile,formatspec,i,ch_data(length(ch_data)),regress(1),regress(2))
 	fclose( myfile );
 
 end
@@ -71,7 +70,7 @@ thetitle = strcat(titletext1,titletext2);
 
 pdffile = strcat("./adc_linearity_results/", filename, '_Linearity_Test','.pdf');
 grid("on");
-axis ([-10,10]);
+axis ([-min(dac_volts),max(dac_volts)]);
 xlabel ('Volts', 'FontName','LiberationMono-Regular.ttf','FontSize',10);
 ylabel ('Volts') #, 'FontName','LiberationMono-Regular.ttf','FontSize',10);
 title(thetitle, 'FontName','LiberationMono-Regular.ttf','FontSize',10);

@@ -76,7 +76,7 @@ def getDacCode_all(nchan):
         dac_code_array.insert(i-1,caget(command_str))
     return dac_code_array
 
-def get435code(channel):
+def get43Xcode(channel):
     adc_code_array = []
     scaling_factor = 256
     i_str = '{0:0>2}'.format(channel)
@@ -86,7 +86,20 @@ def get435code(channel):
     adc_code_scaled = adc_code / scaling_factor
     return adc_code_scaled
     
-def get435codes_all(nchan):
+def get43Xvolts(channel):
+    adc_code_array = []
+    scaling_factor = 256
+    i_str = '{0:0>2}'.format(channel)
+    command_str = ai_uut+":"+ai_site+":AI:WF:"+i_str
+    adc_codes = caget(command_str)
+    adc_code = int(np.round(scipy.mean(adc_codes),0))
+    adc_code_scaled = adc_code / scaling_factor
+    vsf = np.divide(20.0,2.0**24)
+    adc_voltage = np.multiply(adc_code_scaled,vsf)
+    #return adc_voltage
+    return adc_code_scaled
+    
+def get43Xcodes_all(nchan):
     dac_code_array = []
     scaling_factor = 256
     for i in range (1, nchan+1):
@@ -97,6 +110,16 @@ def get435codes_all(nchan):
         adc_code_scaled = adc_code / scaling_factor
         adc_code_array.insert(i-1,adc_code_scaled)
     return adc_code_array
+    
+def get42Xcode(channel):
+    adc_code_array = []
+    scaling_factor = 1
+    i_str = '{0:0>2}'.format(channel)
+    command_str = ai_uut+":"+ai_site+":AI:WF:"+i_str
+    adc_codes = caget(command_str)
+    adc_code = int(np.round(scipy.mean(adc_codes),0))
+    adc_code_scaled = adc_code / scaling_factor
+    return adc_code_scaled
 
 def set_AO(volts,channel):
     i_str = '{0:0>2}'.format(channel)
@@ -122,11 +145,33 @@ def set_SPAN(channel,span):
 def set_SPAN_all(span):
     command_str = ao_uut+":"+ao_site+":RANGE:ALL"
     caput(command_str,span)
+    
+def set_GAIN_all(gain):
+    command_str = ai_uut+":"+ai_site+":GAIN:ALL"
+    caput(command_str,gain)
 
 
 def set_TRG(trg_value):
     command_str = ao_uut+":"+ao_site+":TRG"
     caput(command_str,trg_value)
+
+    
+def getAmbTemp():
+    command_str = ai_uut+":SYS:0:TEMP"
+    amb_temp = caget(command_str)
+    return amb_temp
+
+def set_ACQ43X_sample_rate(rate):
+    command_str = ai_uut+":"+ai_site+":ACQ43X_SAMPLE_RATE"
+    caput(command_str,rate)
+
+def start_stream():
+    command_str = ai_uut+":MODE:CONTINUOUS"
+    caput(command_str,1)
+
+def stop_stream():
+    command_str = ai_uut+":MODE:CONTINUOUS"
+    caput(command_str,0)
 
 
 ############ Other useful incantations that may be built into functions ############
