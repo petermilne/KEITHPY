@@ -28,6 +28,24 @@ def process(date_time,model,nchan,serial_num,temperature,samp_rate,firm_rev,fpga
         filename = serial_num+"_hispeed"
         ch_data = np.vstack((ch_data,[callOctave(filename,nchan)])); # Append vertically to extend array
         
+    elif 'ACQ437' in model :
+        filename = serial_num+"_hires_gain0"
+        ch_data = np.array([callOctave(filename,nchan)])
+        
+        filename = serial_num+"_hires_gain1"
+        ch_data = np.vstack((ch_data,[callOctave(filename,nchan)]))
+        filename = serial_num+"_hires_gain2"
+        ch_data = np.vstack((ch_data,[callOctave(filename,nchan)]))
+        filename = serial_num+"_hires_gain3"
+        ch_data = np.vstack((ch_data,[callOctave(filename,nchan)]))
+        filename = serial_num+"_hispeed_gain0"
+        ch_data = np.vstack((ch_data,[callOctave(filename,nchan)]))
+        filename = serial_num+"_hispeed_gain1"
+        ch_data = np.vstack((ch_data,[callOctave(filename,nchan)]))
+        filename = serial_num+"_hispeed_gain2"
+        ch_data = np.vstack((ch_data,[callOctave(filename,nchan)]))
+        filename = serial_num+"_hispeed_gain3"
+        ch_data = np.vstack((ch_data,[callOctave(filename,nchan)]))
     elif 'ACQ420' in model or 'ACQ425' in model :
         filename = serial_num+"_gain0"
         ch_data = np.array([callOctave(filename,nchan)])

@@ -52,7 +52,7 @@ keith_func.set_AO_all(0)
 
 voltages = np.array([ np.arange(-10,10.5,0.5), np.arange(-5,5.25,0.25), np.arange(-2.5,2.625,0.125), np.arange(-1.25,1.3125,0.0625) ])   # Specify voltages to loop through, this notation is broken as a consequence of there being no software catch for +ve FS. This may be fixed in the future.
 keith_func.start_stream()
-#voltages = np.array([ np.arange(-10,20,10), np.arange(-5,10,5), np.arange(-2.5,5,2.5), np.arange(-1.25,2.5,1.25)])#, np.arange(-2.5,2.625,0.125), np.arange(-1.25,1.3125,0.0625) ])   # Specify voltages to loop through, this notation is broken as a consequence of there being no software catch for +ve FS. This may be fixed in the future.
+
 for run in range(0,run_count_top):
     
     # Create filenames and open CSV
