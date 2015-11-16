@@ -50,8 +50,9 @@ keith_func.set_SPAN_all(3)
 keith_func.set_AO_all(0)
 
 
-#voltages = np.array([ np.arange(-10,10.5,0.5), np.arange(-5,5.25,0.25), np.arange(-2.5,2.625,0.125), np.arange(-1.25,1.3125,0.0625) ])   # Specify voltages to loop through, this notation is broken as a consequence of there being no software catch for +ve FS. This may be fixed in the future.
-voltages = np.array([ np.arange(-10,20,10), np.arange(-5,10,5), np.arange(-2.5,5,2.5), np.arange(-1.25,2.5,1.25)])#, np.arange(-2.5,2.625,0.125), np.arange(-1.25,1.3125,0.0625) ])   # Specify voltages to loop through, this notation is broken as a consequence of there being no software catch for +ve FS. This may be fixed in the future.
+voltages = np.array([ np.arange(-10,10.5,0.5), np.arange(-5,5.25,0.25), np.arange(-2.5,2.625,0.125), np.arange(-1.25,1.3125,0.0625) ])   # Specify voltages to loop through, this notation is broken as a consequence of there being no software catch for +ve FS. This may be fixed in the future.
+keith_func.start_stream()
+#voltages = np.array([ np.arange(-10,20,10), np.arange(-5,10,5), np.arange(-2.5,5,2.5), np.arange(-1.25,2.5,1.25)])#, np.arange(-2.5,2.625,0.125), np.arange(-1.25,1.3125,0.0625) ])   # Specify voltages to loop through, this notation is broken as a consequence of there being no software catch for +ve FS. This may be fixed in the future.
 for run in range(0,run_count_top):
     
     # Create filenames and open CSV
@@ -59,7 +60,7 @@ for run in range(0,run_count_top):
         csv_filename = filename+"_gain"+str(run)+".csv"
     else :
         csv_filename = filename+".csv"
-    print csv_filename
+    print "";print csv_filename
     result_file = open(csv_filename,'wb')
     csv_write = csv.writer(result_file)
     
@@ -68,10 +69,9 @@ for run in range(0,run_count_top):
     channel_header.append('Supplied Voltage')
     csv_write.writerow(channel_header)
     
-    # Set gains and begin streaming, 3 seconds of settling time
+    # Set gains and begin streaming, 2 seconds of settling time
     if has_gains == 1 : keith_func.set_GAIN_all(run)
-    keith_func.start_stream()
-    time.sleep(3)
+    time.sleep(2)
     
     code_array = []
     
@@ -81,22 +81,24 @@ for run in range(0,run_count_top):
         print "V = "+v_str+"V"
         code_array.append([])   # Add another sublist to master list
         keith_func.set_AO_all(voltages[run][i])   # Set AO on current channel
-        time.sleep(4)
+        time.sleep(2)
         
         for channel in range (1,nchan+1):
             
-            code_array[i].append(keith_func.get43Xcode(channel))
+            code_array[i].append(keith_func.get42Xcode(channel))
                     
             # Record DAC Code
-            if channel == nchan: code_array[i].append(keith_func.getKVolts(1,nchan)); print code_array[i]
+            if channel == nchan: code_array[i].append(keith_func.getKVolts(1,1)); print code_array[i]
         
         csv_write.writerow(code_array[i])  # Write to CSV, format as below
     
-    # Return AO to 0V, back to default gains, stop streaming, close CSV file
+    # Return AO to 0V, close CSV file
     keith_func.set_AO_all(0)
-    if has_gains == 1 : keith_func.set_GAIN_all(0)
-    keith_func.stop_stream()
     result_file.close()
+
+# Back to default gains, stop streaming
+if has_gains == 1 : keith_func.set_GAIN_all(0)
+keith_func.stop_stream()
 
 # Call XML generation which in turn calls octave. The eventual output is an XML file describing calibration coefficients for a whole board
 process_cal_data.process(timestamp,model,nchan,card_serial,amb_temp,sample_rate_str,firm_rev,fpga_rev)

@@ -63,7 +63,7 @@ thetitle = strcat(titletext1,titletext2);
 
 pdffile = strcat("./adc_linearity_results/", filename, '_Linearity_Test','.pdf');
 grid("on");
-axis ([-min(dac_volts),max(dac_volts)]);
+axis ([min(dac_volts),max(dac_volts)]);
 xlabel ('Volts', 'FontName','LiberationMono-Regular.ttf','FontSize',10);
 ylabel ('CH Error in Volts') #, 'FontName','LiberationMono-Regular.ttf','FontSize',10);
 title(thetitle, 'FontName','LiberationMono-Regular.ttf','FontSize',10);

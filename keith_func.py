@@ -147,20 +147,9 @@ def set_SPAN_all(span):
     caput(command_str,span)
     
 def set_GAIN_all(gain):
-    #command_str = ai_uut+":"+ai_site+":GAIN:ALL"
-    #caput(command_str,gain)
-    command_str = ai_uut+":"+ai_site+":GAIN:01"
+    command_str = ai_uut+":"+ai_site+":GAIN:ALL"
     caput(command_str,gain)
-    time.sleep(2)
-    command_str = ai_uut+":"+ai_site+":GAIN:02"
-    caput(command_str,gain)
-    time.sleep(2)
-    command_str = ai_uut+":"+ai_site+":GAIN:03"
-    caput(command_str,gain)
-    time.sleep(2)
-    command_str = ai_uut+":"+ai_site+":GAIN:04"
-    caput(command_str,gain)
-    time.sleep(2)
+    
 
 
 def set_TRG(trg_value):
