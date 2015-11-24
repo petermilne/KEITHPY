@@ -13,7 +13,7 @@ ao_uut = global_uut_settings.ao_uut
 ai_site = global_uut_settings.ai_site
 ao_site = global_uut_settings.ao_site
 has_gains = 0
-run_count_top = 1
+run_count_top = 2
 
 
 print "\nAI UUT = "+ai_uut+":"+ai_site
@@ -26,7 +26,7 @@ card = sys.argv[1]
 if card == 'acq437' :
     has_gains = 1
     keith_func.set_GAIN_all(0)
-run_count_top = 4
+    run_count_top = 8
 
 ############ Set output filename and open for CSV writing #########
 command_str = ai_uut+":"+ai_site+":SERIAL";card_serial = caget(command_str)
@@ -49,16 +49,34 @@ keith_func.set_TRG(0)
 keith_func.set_SPAN_all(3)
 keith_func.set_AO_all(0)
 
-voltages = np.array([ np.arange(-10,10.5,0.5), np.arange(-5,5.25,0.25), np.arange(-2,2.1,0.1), np.arange(-1,1.05,0.05) ])   # Specify voltages to loop through, this notation is broken as a consequence of there being no software catch for +ve FS. This may be fixed in the future.
+voltages = np.array([ np.arange(-5,5.25,0.25), np.arange(-5,5.25,0.25), np.arange(-2,2.1,0.1), np.arange(-1,1.05,0.05) ])   # Specify voltages to loop through, this notation is broken as a consequence of there being no software catch for +ve FS. This may be fixed in the future.
 keith_func.start_stream()
 
 for run in range(0,run_count_top):
     
     # Create filenames and open CSV
     if has_gains == 1 :
-        csv_filename = filename+"_gain"+str(run)+".csv"
+        if run < 4 :
+            #Set hi-res mode first
+            keith_func.set_ACQ43X_sample_rate(30000)
+            csv_filename = filename+"_hires_gain"+str(run)+".csv"
+            constr_v_run = run
+        else :
+            #Set hi-speed mode
+            keith_func.set_ACQ43X_sample_rate(80000)
+            csv_filename = filename+"_hispeed_gain"+str(run-4)+".csv"
+            constr_v_run = run - 4
     else :
-        csv_filename = filename+".csv"
+        constr_v_run = 0
+        if run < 1 :
+            #Set hi-res mode first
+            keith_func.set_ACQ43X_sample_rate(30000)
+            csv_filename = filename+"_hires.csv"
+        else :
+            #Set hi-speed mode
+            keith_func.set_ACQ43X_sample_rate(80000)
+            csv_filename = filename+"_hispeed.csv"
+    
     print "";print csv_filename
     result_file = open(csv_filename,'wb')
     csv_write = csv.writer(result_file)
@@ -76,10 +94,10 @@ for run in range(0,run_count_top):
     
     ############ Begin setting AO voltages and reading back from Keithley and AI Card #########
     for i in range (0, len(voltages[run])):
-        v_str = str(voltages[run][i])
+        v_str = str(voltages[constr_v_run][i])
         print "V = "+v_str+"V"
         code_array.append([])   # Add another sublist to master list
-        keith_func.set_AO_all(voltages[run][i])   # Set AO on current channel
+        keith_func.set_AO_all(voltages[constr_v_run][i])   # Set AO on current channel
         time.sleep(2)
         
         for channel in range (1,nchan+1):
