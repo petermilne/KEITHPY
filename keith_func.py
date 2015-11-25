@@ -163,7 +163,7 @@ def getAmbTemp():
     return amb_temp
 
 def set_ACQ43X_sample_rate(rate):
-    command_str = ai_uut+":"+ai_site+":ACQ43X_SAMPLE_RATE"
+    command_str = ai_uut+":1:ACQ43X_SAMPLE_RATE"
     caput(command_str,rate)
 
 def start_stream():
