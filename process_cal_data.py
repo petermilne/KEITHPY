@@ -90,7 +90,7 @@ def process(date_time,model,nchan,serial_num,temperature,samp_rate,firm_rev,fpga
     #data = SubElement(acqcal, 'Data', AICHAN=str(nchan), code_min=str(min_codes), code_max=str(max_codes))
     
     if 'ACQ437' in model :
-        data = SubElement(acqcal, 'Data', AICHAN=str(nchan), code_min=str(min_codes), code_max=str(max_codes), sw="hi_res_mode,gain%d")
+        data = SubElement(acqcal, 'Data', AICHAN=str(nchan), code_min=str(min_codes), code_max=str(max_codes), SW="hi_res_mode,gain%d")
         # ACQ437 - Combine ranges and adc speed modes - SPECIAL CASE
         hires_g0 = SubElement(data, 'Range', name="HI_RES_10V", sw="1,0")
         hires_g1 = SubElement(data, 'Range', name="HI_RES_5V", sw="1,1")
@@ -127,7 +127,7 @@ def process(date_time,model,nchan,serial_num,temperature,samp_rate,firm_rev,fpga
             SubElement(hispeed_g3, 'Calibrated', ch=str(i), eslo=str(split_params[0]), eoff=str(split_params[1]))
         
     elif 'ACQ43' in model :
-        data = SubElement(acqcal, 'Data', AICHAN=str(nchan), code_min=str(min_codes), code_max=str(max_codes), sw="hi_res_mode,gain%d")
+        data = SubElement(acqcal, 'Data', AICHAN=str(nchan), code_min=str(min_codes), code_max=str(max_codes), SW="hi_res_mode,gain%d")
         # ACQ43X
         hires_g0 = SubElement(data, 'Range', name="HI_RES_10V", sw="1,0")
         hispeed_g0 = SubElement(data, 'Range', name="HI_SPEED_10V", sw="0,0")
@@ -140,7 +140,7 @@ def process(date_time,model,nchan,serial_num,temperature,samp_rate,firm_rev,fpga
             SubElement(hispeed_g0, 'Calibrated', ch=str(i), eslo=str(split_params[0]), eoff=str(split_params[1]))
 
     elif 'ACQ420' in model or 'ACQ425' in model :
-        data = SubElement(acqcal, 'Data', AICHAN=str(nchan), code_min=str(min_codes), code_max=str(max_codes), sw="gain%d")
+        data = SubElement(acqcal, 'Data', AICHAN=str(nchan), code_min=str(min_codes), code_max=str(max_codes), SW="gain%d")
         # ACQ42X GAINS
         gain0 = SubElement(data, 'Range', name="10V", sw="0")
         gain1 = SubElement(data, 'Range', name="5V", sw="1")
