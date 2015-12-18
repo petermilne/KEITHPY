@@ -188,7 +188,9 @@ def process(date_time,model,nchan,serial_num,temperature,samp_rate,firm_rev,fpga
     fid.write(prettify(top))
     fid.closed
 
-
+    # Cleanup txt files
+    command = "rm ./cal_files/*.txt"
+    os.system(command)
 
 
 
@@ -204,7 +206,7 @@ def callOctave(filename,nchan):
     os.system(command)
     os.chdir(cwd)   # Return to original working directory
     
-    command = "xdg-open \"/home/projects/ACQ400/KeithPy/octave/adc_linearity_results/"+filename+"_Linearity_Test.pdf\""
+    command = "evince \"/home/projects/ACQ400/KeithPy/octave/adc_linearity_results/"+filename+"_Linearity_Test.pdf\""
     os.system(command)
     raw_input('\033[1m'+"Survey linearity graph and press Enter to continue..."+'\033[0m')
     
