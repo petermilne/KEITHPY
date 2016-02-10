@@ -120,6 +120,16 @@ def get42Xcode(channel):
     adc_code = int(np.round(scipy.mean(adc_codes),0))
     adc_code_scaled = adc_code / scaling_factor
     return adc_code_scaled
+    
+def get480code(channel):
+    adc_code_array = []
+    scaling_factor = 4
+    i_str = '{0:0>2}'.format(channel)
+    command_str = ai_uut+":"+ai_site+":AI:WF:"+i_str
+    adc_codes = caget(command_str)
+    adc_code = int(np.round(scipy.mean(adc_codes),0))
+    adc_code_scaled = adc_code / scaling_factor
+    return adc_code_scaled
 
 def set_AO(volts,channel):
     i_str = '{0:0>2}'.format(channel)

@@ -23,17 +23,13 @@ raw_input('\033[1m'+"Is this correct? If so Press Enter to continue..."+'\033[0m
 card = sys.argv[1]
 
 
-if card == 'acq420' or card == 'acq425' :
-    has_gains = 1
-    keith_func.set_GAIN_all(0)
-    run_count_top = 4
 
 ############ Set output filename and open for CSV writing #########
 command_str = ai_uut+":"+ai_site+":SERIAL";card_serial = caget(command_str)
 command_str = ai_uut+":"+ai_site+":MODEL";model = caget(command_str)
 command_str = ai_uut+":"+ai_site+":NCHAN";nchan = caget(command_str)
 command_str = ai_uut+":1:INTCLK_HZ";sample_rate = str(caget(command_str))
-sample_rate_str = str(sample_rate)+" Hz"
+sample_rate_str = str(sample_rate)+" kHz"
 command_str = ai_uut+":SYS:VERSION:SW";firm_rev = str(caget(command_str))
 command_str = ai_uut+":SYS:VERSION:FPGA";fpga_rev = str(caget(command_str))
 amb_temp = keith_func.getAmbTemp();temp_str = str(amb_temp)
@@ -50,7 +46,7 @@ keith_func.set_SPAN_all(3)
 keith_func.set_AO_all(0)
 
 
-voltages = np.array([ np.arange(-10,10.5,0.5), np.arange(-5,5.25,0.25), np.arange(-2.5,2.625,0.125), np.arange(-1.25,1.3125,0.0625) ])   # Specify voltages to loop through
+voltages = np.array([ np.arange(-2.5,2.625,0.125), np.arange(-5,5.25,0.25), np.arange(-2.5,2.625,0.125), np.arange(-1.25,1.3125,0.0625) ])   # Specify voltages to loop through
 keith_func.start_stream()
 
 for run in range(0,run_count_top):
@@ -85,7 +81,7 @@ for run in range(0,run_count_top):
         
         for channel in range (1,nchan+1):
             
-            code_array[i].append(keith_func.get42Xcode(channel))
+            code_array[i].append(keith_func.get480code(channel))
                     
             # Record DAC Code
             if channel == nchan: code_array[i].append(keith_func.getKVolts(1,1)); print code_array[i]

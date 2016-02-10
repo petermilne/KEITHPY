@@ -56,7 +56,7 @@ def process(date_time,model,nchan,serial_num,temperature,samp_rate,firm_rev,fpga
         ch_data = np.vstack((ch_data,[callOctave(filename,nchan)]))
         filename = serial_num+"_gain3"
         ch_data = np.vstack((ch_data,[callOctave(filename,nchan)]))
-    elif 'ACQ42' in model :
+    elif 'ACQ42' in model or 'ACQ480' in model :
         filename = serial_num
         ch_data = np.array([callOctave(filename,nchan)])
     
@@ -168,9 +168,18 @@ def process(date_time,model,nchan,serial_num,temperature,samp_rate,firm_rev,fpga
        for i in range(1,nchan+1):
             split_params = ch_data[0][i-1]
             SubElement(gain0, 'Calibrated', ch=str(i), eslo=str(split_params[0]), eoff=str(split_params[1]))
+    
+    elif 'ACQ480' in model :
+       data = SubElement(acqcal, 'Data', AICHAN=str(nchan), code_min=str(min_codes), code_max=str(max_codes))
+       # ACQ480 NO GAINS
+       gain0 = SubElement(data, 'Range', name="2.5V")
+       SubElement(gain0, 'Nominal', roff="0", eslo=str(5.0/np.power(2,res)), eoff="0")
+       for i in range(1,nchan+1):
+            split_params = ch_data[0][i-1]
+            SubElement(gain0, 'Calibrated', ch=str(i), eslo=str(split_params[0]), eoff=str(split_params[1]))
             
     
-    # Standerd Footer
+    # Standard Footer
     model_spec = SubElement(top, 'ModelSpec')
     bwidth, bset = getBanks(model,nchan)
     ch_block = SubElement(model_spec, 'ChannelBlockMask')
@@ -220,6 +229,8 @@ def queryWordLength(model) :
         res = 16
     elif 'ACQ43' in model :
         res = 24
+    elif 'ACQ480' in model :
+        res = 14
     else :
         print "Card resolution not found"
         exit()
@@ -249,7 +260,7 @@ def getRate(fpga):
     elif '_01' in fpga or '05' in fpga or '04' in fpga :
         rate = str(1000000)
     elif '08' in fpga :
-        rate = str(50000000)
+        rate = str(80000000)
     else :
         rate = str(128000)
 
