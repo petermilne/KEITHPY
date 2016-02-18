@@ -48,6 +48,7 @@ keith_func.set_AO_all(0)
 
 voltages = np.array([ np.arange(-2.5,2.625,0.125), np.arange(-5,5.25,0.25), np.arange(-2.5,2.625,0.125), np.arange(-1.25,1.3125,0.0625) ])   # Specify voltages to loop through
 keith_func.start_stream()
+time.sleep(30)
 
 for run in range(0,run_count_top):
     
