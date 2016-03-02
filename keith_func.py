@@ -123,7 +123,7 @@ def get42Xcode(channel):
     
 def get480code(channel):
     adc_code_array = []
-    scaling_factor = 4
+    scaling_factor = 1
     i_str = '{0:0>2}'.format(channel)
     command_str = ai_uut+":"+ai_site+":AI:WF:"+i_str
     adc_codes = caget(command_str)

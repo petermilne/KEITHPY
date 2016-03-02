@@ -18,7 +18,7 @@ ao_uut = global_uut_settings.ao_uut
 ai_site = global_uut_settings.ai_site
 ao_site = global_uut_settings.ao_site
 
-def process(date_time,model,nchan,serial_num,temperature,samp_rate,firm_rev,fpga_rev):
+def process(date_time,model,part_num,nchan,serial_num,temperature,samp_rate,firm_rev,fpga_rev):
     
     if 'ACQ435' in model:
         # Add in 437 option. Which will be mix of operating speeds and gains :/
@@ -129,10 +129,17 @@ def process(date_time,model,nchan,serial_num,temperature,samp_rate,firm_rev,fpga
     elif 'ACQ43' in model :
         data = SubElement(acqcal, 'Data', AICHAN=str(nchan), code_min=str(min_codes), code_max=str(max_codes), SW="hi_res_mode,gain%d")
         # ACQ43X
-        hires_g0 = SubElement(data, 'Range', name="HI_RES_10V", sw="1,0")
-        hispeed_g0 = SubElement(data, 'Range', name="HI_SPEED_10V", sw="0,0")
-        SubElement(hires_g0, 'Nominal', roff="0", eslo=str(20.0/np.power(2,res)), eoff="0")
-        SubElement(hispeed_g0, 'Nominal', roff="0", eslo=str(20.0/np.power(2,res)), eoff="0")
+        if "5V" in part_num :
+            hires_g0 = SubElement(data, 'Range', name="HI_RES_5V", sw="1,0")
+            hispeed_g0 = SubElement(data, 'Range', name="HI_SPEED_5V", sw="0,0")
+            SubElement(hires_g0, 'Nominal', roff="0", eslo=str(10.0/np.power(2,res)), eoff="0")
+            SubElement(hispeed_g0, 'Nominal', roff="0", eslo=str(10.0/np.power(2,res)), eoff="0")
+        else :
+            hires_g0 = SubElement(data, 'Range', name="HI_RES_10V", sw="1,0")
+            hispeed_g0 = SubElement(data, 'Range', name="HI_SPEED_10V", sw="0,0")
+            SubElement(hires_g0, 'Nominal', roff="0", eslo=str(20.0/np.power(2,res)), eoff="0")
+            SubElement(hispeed_g0, 'Nominal', roff="0", eslo=str(20.0/np.power(2,res)), eoff="0")
+        
         for i in range(1,nchan+1) :
             split_params = ch_data[0][i-1]
             SubElement(hires_g0, 'Calibrated', ch=str(i), eslo=str(split_params[0]), eoff=str(split_params[1]))
@@ -172,8 +179,12 @@ def process(date_time,model,nchan,serial_num,temperature,samp_rate,firm_rev,fpga
     elif 'ACQ480' in model :
        data = SubElement(acqcal, 'Data', AICHAN=str(nchan), code_min=str(min_codes), code_max=str(max_codes))
        # ACQ480 NO GAINS
-       gain0 = SubElement(data, 'Range', name="2.5V")
-       SubElement(gain0, 'Nominal', roff="0", eslo=str(5.0/np.power(2,res)), eoff="0")
+       if "1V" in part_num :
+           gain0 = SubElement(data, 'Range', name="1V")
+           SubElement(gain0, 'Nominal', roff="0", eslo=str(2.0/np.power(2,res)), eoff="0")
+       else :
+           gain0 = SubElement(data, 'Range', name="2.5V")
+           SubElement(gain0, 'Nominal', roff="0", eslo=str(5.0/np.power(2,res)), eoff="0")
        for i in range(1,nchan+1):
             split_params = ch_data[0][i-1]
             SubElement(gain0, 'Calibrated', ch=str(i), eslo=str(split_params[0]), eoff=str(split_params[1]))
@@ -230,7 +241,7 @@ def queryWordLength(model) :
     elif 'ACQ43' in model :
         res = 24
     elif 'ACQ480' in model :
-        res = 14
+        res = 16
     else :
         print "Card resolution not found"
         exit()

@@ -49,7 +49,12 @@ keith_func.set_TRG(0)
 keith_func.set_SPAN_all(3)
 keith_func.set_AO_all(0)
 
-voltages = np.array([ np.arange(-5,5.25,0.25), np.arange(-5,5.25,0.25), np.arange(-2,2.1,0.1), np.arange(-1,1.05,0.05) ])   # Specify voltages to loop through, this notation is broken as a consequence of there being no software catch for +ve FS. This may be fixed in the future.
+if "5V" in part_num :
+    # 5V Range
+    voltages = np.array([ np.arange(-5,5.25,0.25), np.arange(-5,5.25,0.25), np.arange(-2,2.1,0.1), np.arange(-1,1.05,0.05) ])   # Specify voltages to loop through
+else :
+    voltages = np.array([ np.arange(-10,10.5,0.5), np.arange(-5,5.25,0.25), np.arange(-2,2.1,0.1), np.arange(-1,1.05,0.05) ])   # Specify voltages to loop through
+
 keith_func.start_stream()
 
 for run in range(0,run_count_top):
@@ -118,7 +123,7 @@ if has_gains == 1 : keith_func.set_GAIN_all(0)
 keith_func.stop_stream()
 
 # Call XML generation which in turn calls octave. The eventual output is an XML file describing calibration coefficients for a whole board
-process_cal_data.process(timestamp,model,nchan,card_serial,amb_temp,sample_rate_str,firm_rev,fpga_rev)
+process_cal_data.process(timestamp,model,part_num,nchan,card_serial,amb_temp,sample_rate_str,firm_rev,fpga_rev)
 
 print
 end = time.time()
