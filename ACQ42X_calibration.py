@@ -31,6 +31,7 @@ if card == 'acq420' or card == 'acq425' :
 ############ Set output filename and open for CSV writing #########
 command_str = ai_uut+":"+ai_site+":SERIAL";card_serial = caget(command_str)
 command_str = ai_uut+":"+ai_site+":MODEL";model = caget(command_str)
+command_str = ai_uut+":"+ai_site+":PART_NUM";part_num = caget(command_str)
 command_str = ai_uut+":"+ai_site+":NCHAN";nchan = caget(command_str)
 command_str = ai_uut+":1:INTCLK_HZ";sample_rate = str(caget(command_str))
 sample_rate_str = str(sample_rate)+" Hz"
@@ -101,7 +102,7 @@ if has_gains == 1 : keith_func.set_GAIN_all(0)
 keith_func.stop_stream()
 
 # Call XML generation which in turn calls octave. The eventual output is an XML file describing calibration coefficients for a whole board
-process_cal_data.process(timestamp,model,nchan,card_serial,amb_temp,sample_rate_str,firm_rev,fpga_rev)
+process_cal_data.process(timestamp,model,part_num,nchan,card_serial,amb_temp,sample_rate_str,firm_rev,fpga_rev)
 
 print
 end = time.time()

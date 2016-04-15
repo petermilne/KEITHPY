@@ -31,6 +31,7 @@ if card == 'acq437' :
 ############ Set output filename and open for CSV writing #########
 command_str = ai_uut+":"+ai_site+":SERIAL";card_serial = caget(command_str)
 command_str = ai_uut+":"+ai_site+":MODEL";model = caget(command_str)
+command_str = ai_uut+":"+ai_site+":PART_NUM";part_num = caget(command_str)
 command_str = ai_uut+":"+ai_site+":NCHAN";nchan = caget(command_str)
 command_str = ai_uut+":1:ACQ43X_SAMPLE_RATE";sample_rate = str(caget(command_str))
 sample_rate_str = str(sample_rate)+" Hz"
@@ -103,7 +104,7 @@ for run in range(0,run_count_top):
         print "V = "+v_str+"V"
         code_array.append([])   # Add another sublist to master list
         keith_func.set_AO_all(voltages[constr_v_run][i])   # Set AO on current channel
-        time.sleep(2)
+        time.sleep(3)
         
         for channel in range (1,nchan+1):
             

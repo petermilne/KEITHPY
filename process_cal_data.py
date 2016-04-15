@@ -20,7 +20,7 @@ ao_site = global_uut_settings.ao_site
 
 def process(date_time,model,part_num,nchan,serial_num,temperature,samp_rate,firm_rev,fpga_rev):
     
-    if 'ACQ435' in model:
+    if 'ACQ435' in model or 'ACQ430' in model :
         # Add in 437 option. Which will be mix of operating speeds and gains :/
         filename = serial_num+"_hires"
         ch_data = np.array([callOctave(filename,nchan)]); # Create array from ch_data
@@ -177,17 +177,17 @@ def process(date_time,model,part_num,nchan,serial_num,temperature,samp_rate,firm
             SubElement(gain0, 'Calibrated', ch=str(i), eslo=str(split_params[0]), eoff=str(split_params[1]))
     
     elif 'ACQ480' in model :
-       data = SubElement(acqcal, 'Data', AICHAN=str(nchan), code_min=str(min_codes), code_max=str(max_codes))
+       data = SubElement(acqcal, 'Data', AICHAN=str(nchan), code_min=str(min_codes), code_max=str(max_codes-3), SW="default", DG="ACQ480:GAIN:%02d")
        # ACQ480 NO GAINS
        if "1V" in part_num :
-           gain0 = SubElement(data, 'Range', name="1V")
-           SubElement(gain0, 'Nominal', roff="0", eslo=str(2.0/np.power(2,res)), eoff="0")
+           gain0 = SubElement(data, 'Range', name="1V", sw="default")
+           SubElement(gain0, 'Nominal', roff="0", eslo=str(2.0/np.power(2,res)), eoff="0", min="-1", max="1")
        else :
-           gain0 = SubElement(data, 'Range', name="2.5V")
-           SubElement(gain0, 'Nominal', roff="0", eslo=str(5.0/np.power(2,res)), eoff="0")
+           gain0 = SubElement(data, 'Range', name="2.5V", sw="default")
+           SubElement(gain0, 'Nominal', roff="0", eslo=str(5.0/np.power(2,res)), eoff="0", min="-2.5", max="2.5")
        for i in range(1,nchan+1):
             split_params = ch_data[0][i-1]
-            SubElement(gain0, 'Calibrated', ch=str(i), eslo=str(split_params[0]), eoff=str(split_params[1]))
+            SubElement(gain0, 'Calibrated', ch=str(i), eslo=str(split_params[0]), eoff=str(split_params[1]), min=str(split_params[0]*min_codes + split_params[1]), max=str(split_params[0]*max_codes + split_params[1]))
             
     
     # Standard Footer
